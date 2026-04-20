@@ -5,11 +5,11 @@ import java.security.SecureRandom;
 
 public class Customer implements Runnable {
     private static final SecureRandom generator = new SecureRandom();
-    private final CheckoutQueue sharedLocation; // reference to shared object
+    private final CostcoCheckoutQueue queue; // reference to shared object
 
     // constructor
-    public Customer(CheckoutQueue sharedLocation) {
-        this.sharedLocation = sharedLocation;
+    public Customer(CostcoCheckoutQueue queue) {
+        this.queue = queue;
     }
 
     // store values from 1 to 10 in sharedLocation
@@ -20,7 +20,7 @@ public class Customer implements Runnable {
         for (int count = 1; count <= 10; count++) {
             try { // sleep 0 to 3 seconds, then place value in Ex1.Buffer
                 Thread.sleep(generator.nextInt(3000)); // random sleep
-                sharedLocation.blockingPut(count); // set value in buffer
+                queue.blockingPut(count); // set value in buffer
                 sum += count; // increment sum of values
                 System.out.printf("\t%2d%n", sum);
             }
@@ -31,5 +31,9 @@ public class Customer implements Runnable {
 
         System.out.printf(
                 "Ex1.Producer done producing%nTerminating Ex1.Producer%n");
+    }
+
+    public String getID() {
+        return "";
     }
 }

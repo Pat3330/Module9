@@ -1,30 +1,25 @@
 package costco;
-// Fig. 23.14: SynchronizedBuffer.java
 // Creating a synchronized buffer using an ArrayBlockingQueue.
+
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class CostcoCheckoutQueue implements CheckoutQueue {
-    private final ArrayBlockingQueue<Integer> buffer; // shared buffer
+public class CostcoCheckoutQueue {
+    private final ArrayBlockingQueue<Customer> queue; // shared buffer
 
-    public CostcoCheckoutQueue() {
-        buffer = new ArrayBlockingQueue<Integer>(1);
+    public CostcoCheckoutQueue(int capacity) {
+        this.queue = new ArrayBlockingQueue<>(capacity);
     }
 
-    // place value into buffer
-    @Override
-    public void blockingPut(int value) throws InterruptedException {
-        buffer.put(value); // place value in buffer
-        System.out.printf("%s%2d\t%s%d%n", "Producer writes ", value,
-                "Buffer cells occupied: ", buffer.size());
+    // place customer into buffer
+    public void enterQueue(Customer customer) throws InterruptedException {
+        queue.put(customer); // place value in buffer
+        System.out.println("Customer: " + customer.getID() + " joined the queue. Size: " + queue.size());
     }
 
-    // return value from buffer
-    @Override
-    public int blockingGet() throws InterruptedException {
-        int readValue = buffer.take(); // remove value from buffer
-        System.out.printf("%s %2d\t%s%d%n", "Consumer reads ",
-                readValue, "Buffer cells occupied: ", buffer.size());
-
-        return readValue;
+    //return customer from buffer
+    public Customer nextCustomer() throws InterruptedException {
+        Customer c = queue.take();
+        System.out.println("Cashier chose Customer: " + c.getID() + ". Size: " + queue.size());
+        return c;
     }
 }

@@ -2,6 +2,7 @@ package costco;
 // Fig. 23.15: CircularBufferTest.java
 // Two threads manipulating a blocking buffer that properly
 // implements the producer/consumer relationship.
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -12,10 +13,10 @@ public class CostcoSimulation {
         ExecutorService executorService = Executors.newCachedThreadPool();
 
         // create SynchronizedBuffer to store ints
-        CheckoutQueue sharedLocation = new CostcoCheckoutQueue();
+        CostcoCheckoutQueue queue = new CostcoCheckoutQueue(10);
 
-        executorService.execute(new Customer(sharedLocation));
-        executorService.execute(new Cashier(sharedLocation));
+        executorService.execute(new Customer(queue));
+        executorService.execute(new Cashier(queue));
 
         executorService.shutdown();
         executorService.awaitTermination(1, TimeUnit.MINUTES);

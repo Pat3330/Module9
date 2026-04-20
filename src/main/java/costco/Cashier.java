@@ -5,11 +5,11 @@ import java.security.SecureRandom;
 
 public class Cashier implements Runnable {
     private static final SecureRandom generator = new SecureRandom();
-    private final CheckoutQueue sharedLocation; // reference to shared object
+    private final CostcoCheckoutQueue queue; // reference to shared object
 
     // constructor
-    public Cashier(CheckoutQueue sharedLocation) {
-        this.sharedLocation = sharedLocation;
+    public Cashier(CostcoCheckoutQueue queue) {
+        this.queue = queue;
     }
 
     // read sharedLocation's value 10 times and sum the values
@@ -21,10 +21,9 @@ public class Cashier implements Runnable {
             // sleep 0 to 3 seconds, read value from buffer and add to sum
             try {
                 Thread.sleep(generator.nextInt(3000));
-                sum += sharedLocation.blockingGet();
+                sum += queue.blockingGet();
                 System.out.printf("\t\t\t%2d%n", sum);
-            }
-            catch (InterruptedException exception) {
+            } catch (InterruptedException exception) {
                 Thread.currentThread().interrupt();
             }
         }
